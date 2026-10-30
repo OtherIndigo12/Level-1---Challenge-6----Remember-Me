@@ -394,7 +394,26 @@ forgetBtn.addEventListener("click", function(){
 //            and set the button text back to "⭐ Only favorites"
 // 💡 Hint: keep track with  let onlyFavs = false;  and flip it with  onlyFavs = !onlyFavs;
 
+let onlyFavs = false;
 
+onlyFavsBtn.addEventListener("click", function() {
+
+  onlyFavs = !onlyFavs;
+
+  if (onlyFavs)
+  {
+    onlyFavs = true;
+    renderList(allShows.filter(show => favorites.includes(show.id)));
+    onlyFavsBtn.textContent = "📺 Show all";
+  }
+  else
+  {
+    onlyFavs = false;
+    renderList(filterShows(allShows, searchInput.value));
+    onlyFavsBtn.textContent = "⭐ Only favorites";
+  }
+  
+});
 
 // ---------------------------------------------------------------------
 // STEP 11 · Start the app!
