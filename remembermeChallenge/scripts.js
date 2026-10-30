@@ -211,8 +211,10 @@ async function loadShows() {
     // ✏️ TASK 1c · 🎨 SHOW: instead of drawing ALL shows, draw the ones that
     //    match the search box:  const matches = filterShows(allShows, searchInput.value);
     //    then renderList(matches) and put matches.length in the message.
-    renderList(allShows);
-    setState("success", "🎉 " + allShows.length + " shows ready to binge.");
+    const matches = filterShows(allShows, searchInput.value);
+
+    renderList(matches);
+    setState("success", "🎉 " + matches.length + " shows ready to binge.");
   } catch (err) {
     console.error(err);
     renderList([]);
@@ -267,6 +269,8 @@ searchInput.addEventListener("input", function () {
   } else {
     setState("success", "🎉 " + matches.length + " of " + allShows.length + " shows.");
   }
+
+  localStorage.setItem("binge-search", searchInput.value);
 });
 
 
@@ -332,6 +336,7 @@ listEl.addEventListener("click", function (event) {
   favBtn.textContent = starText(id);
 
   // ✏️ TASK 2b · call updateFavCount() here, so the number changes on every ☆ click
+  updateFavCount();
 });
 
 
@@ -344,7 +349,9 @@ listEl.addEventListener("click", function (event) {
 // 1b · 💾 SAVE: go to the search listener in STEP 10
 // 1c · 🎨 SHOW: go to loadShows in STEP 8
 // ✅ CHECK: search "drama", reload → the box says drama AND only dramas show
-let search = JSON.parse(localStorage.getItem(["binge-search"])) || [];
+let search = localStorage.getItem("binge-search") || "";
+
+searchInput.value = search;
 
 
 // =====================================================================
@@ -355,7 +362,11 @@ let search = JSON.parse(localStorage.getItem(["binge-search"])) || [];
 //      and call it once here, so the number shows on page load.
 // 2b · go to the ☆ click listener in PART 2
 // ✅ CHECK: star 2 shows → "⭐ 2 favorites". Reload → still 2.
+function updateFavCount() {
+  favCountEl.textContent = "⭐ " + favorites.length + " favorites";
+}
 
+updateFavCount();
 
 
 // =====================================================================
@@ -366,8 +377,12 @@ let search = JSON.parse(localStorage.getItem(["binge-search"])) || [];
 //      ⚠️ Use removeItem, NOT localStorage.clear()! Why? (hint: Pizza Tracker 🍕)
 //   2. location.reload();   ← reloads the page like a brand-new visit
 // ✅ CHECK: star shows, search, go light → 🧹 → everything is back to new
-
-
+forgetBtn.addEventListener("click", function(){
+  localStorage.removeItem("binge-theme");
+  localStorage.removeItem("binge-favorites");
+  localStorage.removeItem("binge-search");
+  location.reload();
+})
 
 // =====================================================================
 // 🏆 TASK 4 · BONUS: ⭐ Only favorites
